@@ -6,11 +6,9 @@ import {
   MessageSquare,
   DollarSign,
   Shield,
-  LogOut,
   Menu,
   X
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 import Dashboard from './Dashboard';
 import UserManagement from './UserManagement';
 import ContentModeration from './ContentModeration';
@@ -37,7 +35,6 @@ const menuItems: MenuItem[] = [
 export default function AdminPanel() {
   const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { admin, logout } = useAuth();
 
   const ActiveComponent = menuItems.find(item => item.id === activeMenuItem)?.component || Dashboard;
 
@@ -87,21 +84,6 @@ export default function AdminPanel() {
             </button>
           ))}
         </nav>
-
-        <div className="p-4 border-t border-slate-700">
-          <div className="bg-slate-800/50 rounded-xl p-4 mb-3">
-            <p className="text-xs text-slate-400 mb-1">Logged in as</p>
-            <p className="font-semibold text-white text-sm">{admin?.email}</p>
-            <p className="text-xs text-blue-400 capitalize mt-1">{admin?.role.replace('_', ' ')}</p>
-          </div>
-          <button
-            onClick={logout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors font-medium"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
-        </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-h-screen">
