@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -9,34 +10,26 @@ import {
   Menu,
   X
 } from 'lucide-react';
-import Dashboard from './Dashboard';
-import UserManagement from './UserManagement';
-import ContentModeration from './ContentModeration';
-import ChatMonitoring from './ChatMonitoring';
-import Subscriptions from './Subscriptions';
-import VerificationManagement from './VerificationManagement';
 
 type MenuItem = {
   id: string;
   label: string;
   icon: React.ReactNode;
-  component: React.ComponentType;
+  path: string;
 };
 
 const menuItems: MenuItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, component: Dashboard },
-  { id: 'users', label: 'User Management', icon: <Users className="w-5 h-5" />, component: UserManagement },
-  { id: 'content', label: 'Content Moderation', icon: <Image className="w-5 h-5" />, component: ContentModeration },
-  { id: 'chat', label: 'Chat Monitoring', icon: <MessageSquare className="w-5 h-5" />, component: ChatMonitoring },
-  { id: 'subscriptions', label: 'Subscriptions', icon: <DollarSign className="w-5 h-5" />, component: Subscriptions },
-  { id: 'verification', label: 'Verifications', icon: <Shield className="w-5 h-5" />, component: VerificationManagement }
+  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/' },
+  { id: 'users', label: 'User Management', icon: <Users className="w-5 h-5" />, path: '/users' },
+  { id: 'content', label: 'Content Moderation', icon: <Image className="w-5 h-5" />, path: '/content' },
+  { id: 'chat', label: 'Chat Monitoring', icon: <MessageSquare className="w-5 h-5" />, path: '/chat' },
+  { id: 'subscriptions', label: 'Subscriptions', icon: <DollarSign className="w-5 h-5" />, path: '/subscriptions' },
+  { id: 'verification', label: 'Verifications', icon: <Shield className="w-5 h-5" />, path: '/verification' }
 ];
 
 export default function AdminPanel() {
-  const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const ActiveComponent = menuItems.find(item => item.id === activeMenuItem)?.component || Dashboard;
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -67,21 +60,19 @@ export default function AdminPanel() {
 
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {menuItems.map((item) => (
-            <button
+            <Link
               key={item.id}
-              onClick={() => {
-                setActiveMenuItem(item.id);
-                setIsSidebarOpen(false);
-              }}
+              to={item.path}
+              onClick={() => setIsSidebarOpen(false)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                activeMenuItem === item.id
+                location.pathname === item.path
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                   : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
               }`}
             >
               {item.icon}
               <span className="font-medium">{item.label}</span>
-            </button>
+            </Link>
           ))}
         </nav>
       </aside>
@@ -104,7 +95,7 @@ export default function AdminPanel() {
         </header>
 
         <main className="flex-1 p-6 lg:p-8">
-          <ActiveComponent />
+          <Outlet />
         </main>
       </div>
 
